@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Tambah Mahasiswa</ion-title>
+    <ion-title>{{ isEditMode ? 'Edit Mahasiswa' : 'Tambah Mahasiswa' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -50,7 +50,7 @@
 
     <div class="ion-margin-top">
       <ion-button expand="block" type="submit" [disabled]="!formMahasiswa.valid">
-        Simpan Data
+        {{ isEditMode ? 'Update Data' : 'Simpan Data' }}
       </ion-button>
     </div>
 

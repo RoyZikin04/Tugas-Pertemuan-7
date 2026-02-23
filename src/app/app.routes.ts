@@ -14,8 +14,14 @@ export const routes: Routes = [
     // Perhatikan bagian /:id -> ini adalah parameter dinamis
     path: 'detail/:id',
     loadComponent: () => import('./detail/detail.page').then( m => m.DetailPage)
-  },  {
+  },
+  {
     path: 'tambah-mhs',
+    loadComponent: () => import('./tambah-mhs/tambah-mhs.page').then( m => m.TambahMhsPage)
+  },
+  {
+    // Route untuk edit mahasiswa dengan parameter ID
+    path: 'tambah-mhs/:id',
     loadComponent: () => import('./tambah-mhs/tambah-mhs.page').then( m => m.TambahMhsPage)
   },
 

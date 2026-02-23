@@ -37,4 +37,46 @@ export class DataMahasiswaService {
       value: JSON.stringify(dataLama)
     });
   }
+
+  // FUNGSI 3: Mengambil Data Berdasarkan ID
+  async getDataById(id: number) {
+    const data = await this.getData();
+    return data.find((mhs: any) => mhs.id === id);
+  }
+
+  // FUNGSI 4: Update Data
+  async updateData(id: number, dataUpdate: any) {
+    // 1. Ambil semua data
+    const data = await this.getData();
+
+    // 2. Cari index data yang akan diupdate
+    const index = data.findIndex((mhs: any) => mhs.id === id);
+
+    // 3. Jika data ditemukan, update datanya
+    if (index !== -1) {
+      data[index] = { ...data[index], ...dataUpdate, id }; // Pastikan ID tetap sama
+
+      // 4. Simpan kembali ke Preferences
+      return await Preferences.set({
+        key: this.KEY_MAHASISWA,
+        value: JSON.stringify(data)
+      });
+    }
+    return null;
+  }
+
+  // FUNGSI 5: Hapus Data
+  async deleteData(id: number) {
+    // 1. Ambil semua data
+    const data = await this.getData();
+
+    // 2. Filter data, buang yang ID-nya sama dengan parameter
+    const dataFiltered = data.filter((mhs: any) => mhs.id !== id);
+
+    // 3. Simpan kembali ke Preferences
+    return await Preferences.set({
+      key: this.KEY_MAHASISWA,
+      value: JSON.stringify(dataFiltered)
+    });
+  }
 }

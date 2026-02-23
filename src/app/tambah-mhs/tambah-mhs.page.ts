@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonItem, IonInput, IonButton, IonText, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
-import { Router } from '@angular/router'; // Import Router
+import { Router, ActivatedRoute } from '@angular/router'; // Import Router dan ActivatedRoute
 import { DataMahasiswaService } from '../services/data-mahasiswa.service'; // Import Service
 
 @Component({
@@ -21,21 +21,41 @@ export class TambahMhsPage implements OnInit {
 
   // Variabel untuk menampung form
   formMahasiswa!: FormGroup;
+  isEditMode = false; // Flag untuk mode edit
+  mahasiswaId: number | null = null; // ID mahasiswa yang sedang diedit
 
-  // PERBAIKAN DI SINI: Inject Service dan Router ke Constructor
+  // PERBAIKAN DI SINI: Inject Service, Router, dan ActivatedRoute ke Constructor
   constructor(
     private formBuilder: FormBuilder,
     private dataService: DataMahasiswaService, // <--- Service Data
-    private router: Router                     // <--- Service Router (Pindah Halaman)
+    private router: Router,                     // <--- Service Router (Pindah Halaman)
+    private route: ActivatedRoute              // <--- Service untuk ambil parameter URL
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // Inisialisasi Form
     this.formMahasiswa = this.formBuilder.group({
       nama: ['', [Validators.required, Validators.minLength(3)]],
       nim: ['', [Validators.required, Validators.pattern('^[0-9]*$')]], // Hanya angka
       jurusan: ['', [Validators.required]]
     });
+
+    // Cek apakah ada parameter ID di URL (mode edit)
+    const idString = this.route.snapshot.paramMap.get('id');
+    if (idString) {
+      this.isEditMode = true;
+      this.mahasiswaId = parseInt(idString, 10);
+      
+      // Load data mahasiswa yang akan diedit
+      const mahasiswa = await this.dataService.getDataById(this.mahasiswaId);
+      if (mahasiswa) {
+        this.formMahasiswa.patchValue({
+          nama: mahasiswa.nama,
+          nim: mahasiswa.nim,
+          jurusan: mahasiswa.jurusan
+        });
+      }
+    }
   }
 
   // Fungsi yang dipanggil saat tombol Simpan diklik
@@ -43,14 +63,19 @@ export class TambahMhsPage implements OnInit {
   async simpanData() {
     if (this.formMahasiswa.valid) {
 
-      // 1. Panggil Service untuk menyimpan data
-      await this.dataService.tambahData(this.formMahasiswa.value);
+      if (this.isEditMode && this.mahasiswaId) {
+        // Mode Edit: Update data yang sudah ada
+        await this.dataService.updateData(this.mahasiswaId, this.formMahasiswa.value);
+        console.log('Data Diupdate:', this.formMahasiswa.value);
+        alert('Data Berhasil Diupdate!');
+      } else {
+        // Mode Tambah: Tambah data baru
+        await this.dataService.tambahData(this.formMahasiswa.value);
+        console.log('Data Disimpan:', this.formMahasiswa.value);
+        alert('Data Berhasil Disimpan!');
+      }
 
-      // 2. Tampilkan pesan sukses
-      console.log('Data Disimpan:', this.formMahasiswa.value);
-      alert('Data Berhasil Disimpan!');
-
-      // 3. Reset Form & Kembali ke Halaman Home
+      // Reset Form & Kembali ke Halaman Home
       this.formMahasiswa.reset();
       this.router.navigateByUrl('/home');
 

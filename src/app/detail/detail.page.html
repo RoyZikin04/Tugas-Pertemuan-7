@@ -3,15 +3,49 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detail Info</ion-title>
+    <ion-title>Detail Mahasiswa</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div style="text-align: center; margin-top: 50px;">
-    <h1>ID Mahasiswa:</h1>
-    <h2 style="font-size: 3em; color: blue;">{{ idMahasiswa }}</h2>
-    <p>Di pertemuan berikutnya (Backend), ID ini akan dipakai untuk request data lengkap ke Database.</p>
+  <ion-card *ngIf="mahasiswa">
+    <ion-card-header>
+      <ion-card-title>{{ mahasiswa.nama }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label>
+          <h3>NIM</h3>
+          <p>{{ mahasiswa.nim }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Jurusan</h3>
+          <p *ngIf="mahasiswa.jurusan === 'TI'">Teknik Informatika</p>
+          <p *ngIf="mahasiswa.jurusan === 'SI'">Sistem Informasi</p>
+          <p *ngIf="mahasiswa.jurusan === 'DKV'">Desain Komunikasi Visual</p>
+        </ion-label>
+      </ion-item>
+
+      <div style="margin-top: 20px;">
+        <ion-button expand="block" color="primary" (click)="editData()">
+          <ion-icon slot="start" name="create"></ion-icon>
+          Edit Data
+        </ion-button>
+
+        <ion-button expand="block" color="danger" (click)="hapusData()">
+          <ion-icon slot="start" name="trash"></ion-icon>
+          Hapus Data
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="!mahasiswa" style="text-align: center; margin-top: 50px;">
+    <p>Data tidak ditemukan</p>
   </div>
 </ion-content>
 
