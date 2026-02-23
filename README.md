@@ -8,7 +8,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Capacitor](https://img.shields.io/badge/Capacitor-5+-119EFF?style=for-the-badge&logo=capacitor&logoColor=white)
 
-> Tugas Praktikum Pertemuan 7 — Mata Kuliah **Pemrograman Bergerak**  
+> Tugas Praktikum Pertemuan 7 Roy Zikin — Mata Kuliah **Pemrograman Bergerak**  
 > Dosen: **Rosidin, S.Kom., M.Kom.**
 
 </div>
